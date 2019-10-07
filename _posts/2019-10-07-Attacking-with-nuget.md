@@ -1,15 +1,11 @@
 ---
 layout: post
-category: publish
+category: none
 title: Attacking with nuget
 ---
 
 <p>
-So this is the first time I've written about a security issue.
-I decided to write about this as the vendor was unresponsive and looking their previous CVEs it seems to be a
-pattern. The other reason is that if any organisation is using this product, most of their machines are at risk. 
-
-So I give you <a href="https://www.kaseya.com/products/vsa/">Kaseya VSA.</a>
+Supply chain attacks through
 </p>
 
 <h3>Product</h3>
