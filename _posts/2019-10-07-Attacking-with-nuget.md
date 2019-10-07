@@ -56,6 +56,14 @@ So a real world example of this is MyGet.org hosting a private package - given I
 
 
 <h3>Finding vulnerable projects</h3>
+<h5>Non targeted</h5>
 <p>
-
+Use the github API to search repositories written in C# or another .Net language, ones that have recent activity such as a push or create.
+Then search the repository for a nuget.config. Instead the configuration file check for two feeds in my example nuget.org and myget.org.
+Then search the repository for packages.config and extract all the packages listed. Remove all well known references (Anything from Microsoft)
+Now search nuget.org for any package name and version that was found that <b>isn't</b> hosted there. 
+You now have a potentially way to gain access - if certificates or hashes are validated on packages this may not work.
+</p>
+<h5>Targeted</h5>
+<p>
 </p>
