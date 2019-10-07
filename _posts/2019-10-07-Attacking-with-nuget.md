@@ -12,7 +12,6 @@ to attack an organization recently. I wanted to see how easy it would be to gain
 <h3>What is nuget?</h3>
 <p>
 Going from the first google result - its a package manager developed by Microsoft much like NPM.
-It adds versioning and removes dll reference hell some of us had to endure years ago.
 </p>
 
 <h3>Nuget packages</h3>
