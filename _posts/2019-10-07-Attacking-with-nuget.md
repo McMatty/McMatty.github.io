@@ -1,6 +1,6 @@
 ---
 layout: post
-category: published
+category: publish
 title: Attacking with nuget
 ---
 
