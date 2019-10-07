@@ -24,6 +24,8 @@ Package feeds in nuget are resolved based on which feed responds first. Visual s
 
 So nuget feeds are vulnerable to name collisions where the closest source will always be checked first. If this source is nuget.org an attacker can create a package on this public feed and have it pulled before a private feed as long as the attacker knows the package name and versions. This package will also be signed by nuget.org.
 
+A condition for this is a project will need to be using two feeds nuget.org and another slower feed. So any feed hosted locally or on the internal network should not be suspectiable to this issue.
+
 So a real world example of this is MyGet.org hosting a private package - given I know the version and name I can create a match package on nuget.org given it doesn't already exist. Now I am relying on the order of feeds resolving - nuget.org is hosted on Azure and mirrored in the different regions MyGet.org is not - nuget.org wins the race and my package is pulled first.
 </p>
 
