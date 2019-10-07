@@ -5,7 +5,9 @@ title: Attacking with nuget
 ---
 
 <p>
-Supply chain attacks through
+Supply chain attacks through package management is nothing new but I have been looking into how it could be used
+to attack an organization recently. I wanted to see how easy it would be to target an organization and what steps would
+be required to use this to gain a foothold.
 </p>
 
 <h3>Product</h3>
@@ -69,15 +71,3 @@ Change the Write-Host command to the code to be executed or update the script to
 All scripts should be signed and verified prior to execution eliminating the ability to append arbitrary commands. Additionally Kaseya should remove the excessive privileges on the working directory. 
 Removing <code class="highlighter-rouge">Authenticated Users</code> permissions to write/append would be another step forward though I am unsure of the impact on the Kaysea product.
 </p>
-
-<h3>Timeline</h3>
-<ul>
-  <li>16-06-2019 :: Issue found</li>
-  <li>18-06-2019 :: security@ emailed requesting steps to disclose</li>  
-  <li>30-06-2019 :: CERT contacted due to non response of vendor from official email address</li>
-  <li>31-06-2019 :: CERT still unable to contact vendor</li>
-  <li>07-07-2019 :: CERT makes contact with vendor. Discover security@ address is not monitored by vendor</li>
-  <li>20-08-2019 :: Vendor confirms receipt of details</li>
-  <li>27-08-2019 :: Email sent indicating intention to disclose due to lack of response</li>
-  <li>02-09-2019 :: No response. Findings published</li>
-</ul>
