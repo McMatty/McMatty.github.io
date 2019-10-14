@@ -108,6 +108,7 @@ To be able to do this several conditions are required:
 <pre>
     <code>
     #Yes yes I know its an awful mess but it works and my version on git is far prettier
+    #Also git can only pull back a max of 1000 repos at a time 
     
     
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -117,7 +118,7 @@ function Get-Git {
     [int16]$retryCount = 3
     )
 
-    $base64AuthInfo = "<GITHUB API TOKEN>"
+    $base64AuthInfo = "GITHUB-API-TOKEN"
     $base64AuthInfo = [System.Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($base64AuthInfo))
     $success        = $false
     $numberOfAttempts = 0
@@ -323,7 +324,7 @@ function Find-VulnerableReposotories {
 }
 
 Clear-Host
-Find-VulnerableReposotories -minutes 255
+Find-VulnerableReposotories -minutes 25
     </code>
 </pre>
 
