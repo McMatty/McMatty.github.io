@@ -5,8 +5,7 @@ title: Attacking with nuget
 ---
 
 <p>
-Supply chain attacks through package management is nothing new but I have been looking into how it could be used
-to attack an organization recently. I wanted to see how easy it would be to gain a foothold.
+Supply chain attacks through package management systems is not new however there does not seem to be much written about nuget. 
 </p>
 
 <h3>What is nuget?</h3>
@@ -30,11 +29,14 @@ to attack an organization recently. I wanted to see how easy it would be to gain
 </p>
 
 <h5>Methods of attack</h5>
-<p>  
-So we have a few avenues here. 
-Create a malicious dll to be attached to a users project - perhaps maintaining the expected funtionality.
-Create a malicious PowerShell script and add it to the package so it executes and adds the expected artefact to the project.
+<p>
+    <ul>
+        <li>Package hijacking on nuget or public feed</li>          
+        <li>Tamper with existing packages in a feed</li>
+        <li>Typo squat popular packages on nuget or public feed</li>
+    </ul>
 </p>
+
 <h5>How to weaponize</h5>
 <p>  
 
