@@ -96,7 +96,7 @@ A condition for this is a project will need to be using two feeds nuget.org and 
     The same as above but alter the script to search only the target organisation repository or that of any developers known to work         within the organisation. Additionally you could reverse applications built by the organisation and attempt to determine nuget           packages used. Assembly versions and namespace used across more than one application are relevant guesses - but are just guesses.
 </p>
 
-<h5>Script</h5>
+<h5>Script to locate potentially vulnerable projects</h5>
 <pre>
     <code>
 
