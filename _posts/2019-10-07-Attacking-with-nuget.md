@@ -6,6 +6,7 @@ title: Attacking with nuget
 
 <p>
 Supply chain attacks through package management systems is not new however there does not seem to be much written about nuget. 
+Let me just fix that for you.
 </p>
 
 <h3>What is nuget?</h3>
@@ -20,7 +21,7 @@ Supply chain attacks through package management systems is not new however there
   </pre>
 </p>
 
-<h3>Nuget packages</h3>
+<h3>What are nuget packages</h3>
 <p>
   <pre>
     <code>
@@ -79,7 +80,7 @@ To be able to do this several conditions are required:
     Mitigated with certificate validation and hash checking.
 </p>
 
-<h5>Typo squating</h5>
+<h3>Typo squating</h3>
 <p>  
     Simply create malicious packages on nuget.org with common typos of popular packages. Much like all typo squating.
 </p>
@@ -97,19 +98,26 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 <p>
     <ol>
         <li>
-            Use the github API to search repositories written in C# or another .Net language, ones that have recent activity such as a               push or create.
+            Use the github API to search repositories written in C# or favorite flavor of .NET. Search for recent activity such as a               push or create. Active development work requires the packages when additional developers come on to the project.
             </li>
         <li>
-            Then search the repository for a nuget.config. Instead the configuration file check for two feeds in my example nuget.org               and myget.org.
+            Then search the repository for a nuget.config. In the configuration file check for two feeds in my example nuget.org               and myget.org.
         </li>
         <li>
-            Then search the repository for packages.config and extract all the packages listed. 
+            Then search the repository for packages.config or .csproj and extract all the packages listed. 
         </li>
         <li>
             Now search nuget.org for any package name and version that was found that <b>isn't</b> hosted there.
-        </li> 
+            If you cannot find it then this is a candidate for a hijack. 
+        </li>
+        <li>
+            <i>
+                This is only a candiate for attack - network latency, package validation are still obsticles that are not easy to                       determine.
+            </i>
+        </li>
     </ol>
 </p>
 <h5>Targeted</h5>
 <p>
+    The same as above but alter the script to search only the target organisation repository or that of any developers known to work         within the organisation. Additionally you could reverse applications built by the organisation and attempt to determine nuget           packages used. Assembly versions and namespace used across more than one application are relevant guesses - but are just guesses.
 </p>
