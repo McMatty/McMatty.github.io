@@ -238,9 +238,9 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 
         Write-Host "$($pushedRepos.items.Count) repositories have changed in the last $minutes minutes" -ForegroundColor Green
         $matchingConfig =   $pushedRepos.items.full_name |
-                            Where-Object {-not (Remove-Repositories $_)}  |
-                            ForEach-Object { Get-SearchInfo -Uri "https://api.github.com/search/code?q=nuget.org+filename:nuget.config+repo:$($_)" -githubToken $githubToken } |
-                            Where-Object { $_.total_count -gt 0}
+        Where-Object {-not (Remove-Repositories $_)}  |
+        ForEach-Object { Get-SearchInfo -Uri "https://api.github.com/search/code?q=nuget.org+filename:nuget.config+repo:$($_)" -githubToken $githubToken } |
+         Where-Object { $_.total_count -gt 0}
 
         if($matchingConfig.items.Count -le 0) {
             Write-Host "No nuget.config files found referencing nuget.org as a package source"
@@ -265,8 +265,8 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 
             $nugetReferenceSearchResults =@()
             $multipleFeedConfigs.repository.full_name | 
-                                Select-Object -Unique |
-                                ForEach-Object { $nugetReferenceSearchResults += Get-SearchInfo -Uri "https://api.github.com/search/code?q=filename:packages.config+filename:*.csproj+repo:$($_)" -githubToken $githubToken } 
+            Select-Object -Unique |
+            ForEach-Object { $nugetReferenceSearchResults += Get-SearchInfo -Uri "https://api.github.com/search/code?q=filename:packages.config+filename:*.csproj+repo:$($_)" -githubToken $githubToken } 
 
             $nugetPackages =    $nugetReferenceSearchResults.items |   
                                 Where-Object { $_.name.ToLower() -eq "packages.config" -or $_.name.ToLower().EndsWith(".csproj") }                             
@@ -300,5 +300,5 @@ A condition for this is a project will need to be using two feeds nuget.org and 
     Clear-Host
     Find-VulnerableRepositories -minutes 15 -githubToken "<GITHUB TOKEN>"
     </code>
-<pre/>
+</pre>
 
