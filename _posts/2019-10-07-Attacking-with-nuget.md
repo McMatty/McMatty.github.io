@@ -13,7 +13,8 @@ to attack an organization recently. I wanted to see how easy it would be to gain
 <p>
 <pre>
     <code>
-    For .NET (including .NET Core), the Microsoft-supported mechanism for sharing code is NuGet, which defines how packages for .NET are created, hosted, and consumed, and provides the tools for each of those roles
+    For .NET (including .NET Core), the Microsoft-supported mechanism for sharing code is NuGet, 
+    <br/>which defines how packages for .NET are created, hosted, and consumed, and provides the tools for each of those roles.
     </code>
   </pre>
 </p>
@@ -22,10 +23,12 @@ to attack an organization recently. I wanted to see how easy it would be to gain
 <p>
   <pre>
     <code>
-    Put simply, a NuGet package is a single ZIP file with the .nupkg extension that contains compiled code (DLLs), other files related to that code, and a descriptive manifest that includes information like the package's version number.
+    Put simply, a NuGet package is a single ZIP file with the .nupkg extension that contains compiled code (DLLs), 
+    <br/>other files related to that code, and a descriptive manifest that includes information like the package's version number.
     </code>
   </pre>
 </p>
+
 <h5>Methods of attack</h5>
 <p>  
 So we have a few avenues here. 
