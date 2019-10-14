@@ -11,14 +11,20 @@ to attack an organization recently. I wanted to see how easy it would be to gain
 
 <h3>What is nuget?</h3>
 <p>
-Going from the first google result - its a package manager developed by Microsoft much like NPM.
+<pre>
+    <code>
+    For .NET (including .NET Core), the Microsoft-supported mechanism for sharing code is NuGet, which defines how packages for .NET are created, hosted, and consumed, and provides the tools for each of those roles
+    </code>
+  </pre>
 </p>
 
 <h3>Nuget packages</h3>
 <p>
-Nuget packages are basically a zip file with some artefacts to be used in a .Net project. These are normally dlls to be used in project.
-Microsoft analyzers also come in this format and add themselves to projects. 
-The question is how do they add themselves to projects - well it turns out when these projects are pulled down by a developer or build a PowerShell script in the package is executed.
+  <pre>
+    <code>
+    Put simply, a NuGet package is a single ZIP file with the .nupkg extension that contains compiled code (DLLs), other files related to that code, and a descriptive manifest that includes information like the package's version number.
+    </code>
+  </pre>
 </p>
 <h5>Methods of attack</h5>
 <p>  
