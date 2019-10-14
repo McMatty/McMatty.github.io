@@ -64,7 +64,6 @@ To be able to do this several conditions are required:
 <h5>Weaponizing a nuget package</h5>
 <p>
 A condition for this is a project will need to be using two feeds nuget.org and another slower feed. So any feed hosted locally or on the internal network should not be suspectiable to this issue.
-
 </p>
 
 
@@ -96,3 +95,210 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 <p>
     The same as above but alter the script to search only the target organisation repository or that of any developers known to work         within the organisation. Additionally you could reverse applications built by the organisation and attempt to determine nuget           packages used. Assembly versions and namespace used across more than one application are relevant guesses - but are just guesses.
 </p>
+
+<h5>Script</h5>
+<pre>
+    <code>
+
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    function Get-Git {
+        param(
+        [string]$uri,
+        [string]$githubToken,
+        [int16]$retryCount = 3
+        )
+
+        $base64AuthInfo = [System.Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes($githubToken))
+        $success        = $false
+        $numberOfAttempts = 0
+        while(!$success -and ($numberOfAttempts -le $retryCount))
+        {
+            try
+            {
+                Invoke-RestMethod -Headers @{Authorization = "Basic $base64AuthInfo" } -Method Get -Uri $uri
+                $success = $true
+            }
+            catch
+            {
+                Write-Host "Error calling $uri. Will wait 3 seconds before attempting again. Retry count $numberOfAttempts/$retryCount"
+                $success = $false
+                $numberOfAttempts++
+                Start-Sleep -Seconds 3
+            }
+        }
+    }
+
+    function Get-SearchInfo{
+        param(
+            [string]$uri,
+            [string]$githubToken
+        )
+        #Write-Host "Calling $uri" -ForegroundColor Green
+
+        $apiRateLimit = Get-Git -uri "https://api.github.com/rate_limit" -githubToken $githubToken
+        if ($apiRateLimit.resources.search.remaining -lt 1)
+        {
+            Write-Host "Github rate limit hit."
+            $wait = $apiRateLimit.resources.search.reset - (Get-Date (Get-Date).ToUniversalTime() -UFormat %s)
+            if($wait -gt 0){
+                Write-Host "Sleeping for $wait seconds" -ForegroundColor Red
+                Start-Sleep -Seconds ($wait + 1)
+            }
+        }
+
+        Get-Git -uri $uri -githubToken $githubToken
+    }
+
+    function Get-EncodingFromBytes
+    {
+        param([byte[]]$bytes)
+
+        $bom = $bytes | Select-Object -First 4
+
+        if ($bom[0] -eq 0x2b -and $bom[1] -eq 0x2f -and $bom[2] -eq 0x76)
+        {
+           "Encoding.UTF7"
+        }
+        elseif ($bom[0] -eq 0xef  -and $bom[1] -eq 0xbb  -and $bom[2] -eq 0xbf)
+        {
+           "Encoding.UTF8"
+        }
+        elseif ($bom[0] -eq 0  -and $bom[1] -eq 0  -and $bom[2] -eq 0xfe -and $bom[2] -eq 0xff)
+        {
+           "Encoding.UT32"
+        }
+        elseif ($bom[0] -eq 0xff  -and $bom[1] -eq 0xfe )
+        {
+           "Encoding.Unicode"
+        }
+        elseif ($bom[0] -eq 0xfe  -and $bom[1] -eq 0xff )
+        {
+           "Encoding.BigEndianUnicode"
+        }
+        else
+        {
+           "Encoding.ASCII"
+        }
+    }
+
+    function Remove-Repositories
+    {
+        [CmdletBinding()]
+        param (
+            [Parameter()]
+            [string]
+            $repositoryName
+        )
+
+        ($repositoryName.ToLower() -like "Lombiq*") #No idea why but Lombiq appears to have constant updates but not commits - search issue from github?
+    }
+
+    function Get-XmlFileContent {
+    [CmdletBinding()]
+    param (
+        [Parameter()]
+        [string]
+        $url
+    )
+
+        $base64Config           = (Get-SearchInfo -Uri $url).content.Replace("`n","")
+        $byteArray              = [System.Convert]::FromBase64String($base64Config)
+        $encodingType           = Get-EncodingFromBytes $byteArray
+        [xml]$xmlFileContent    = $null
+
+        switch ($encodingType) {
+            "Encoding.UTF8"                 { [xml]$xmlFileContent    = [System.Text.Encoding]::UTF8.GetString($byteArray).TrimStart([char]65279) ; break} #Trim added as the BOM is pushed out in the GetString request
+            "Encoding.Unicode"              { [xml]$xmlFileContent    = [System.Text.Encoding]::Unicode.GetString($byteArray) ; break }
+            "Encoding.BigEndianUnicode"     { [xml]$xmlFileContent    = [System.Text.Encoding]::BigEndianUnicode.GetString($byteArray) ; break }
+            "Encoding.ASCII"                { [xml]$xmlFileContent    = [System.Text.Encoding]::ASCII.GetString($byteArray) ; break }       
+        }
+
+        $xmlFileContent
+    }
+
+    function Find-VulnerableRepositories {
+        [CmdletBinding()]
+        param (
+            [Parameter()]
+            [Int]
+            $minutes = 5,
+            [string]$githubToken
+        )
+
+        #TODO: Move these into seperate functions and restructure
+        $index      = 1
+        $isNotEnd   = $true
+        $fromDate = (Get-Date).AddMinutes(-$minutes).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss')
+        [Array]$pushedRepos = @()
+        while($isNotEnd){
+            $pushedRepos        += Get-SearchInfo -Uri "https://api.github.com/search/repositories?q=size:>=500+archived:false+language:CSharp+pushed:>=$fromDate&page=$index&per_page=100&order=asc" -githubToken $githubToken
+            $isNotEnd           = ($pushedRepos.items.Count -lt $pushedRepos[0].total_count) -and ($index -lt 10)
+            $index++
+         }
+
+        Write-Host "$($pushedRepos.items.Count) repositories have changed in the last $minutes minutes" -ForegroundColor Green
+        $matchingConfig =   $pushedRepos.items.full_name |
+                            Where-Object {-not (Remove-Repositories $_)}  |
+                            ForEach-Object { Get-SearchInfo -Uri "https://api.github.com/search/code?q=nuget.org+filename:nuget.config+repo:$($_)" -githubToken $githubToken } |
+                            Where-Object { $_.total_count -gt 0}
+
+        if($matchingConfig.items.Count -le 0) {
+            Write-Host "No nuget.config files found referencing nuget.org as a package source"
+            return
+        }
+
+        #TODO: Fix this mess below
+        $multipleFeedConfigs = $matchingConfig.items |
+                               Where-Object { $_.name.ToLower() -eq "nuget.config"} |
+                               Where-Object {
+                                        $nugetConfig = Get-XmlFileContent -url $_.url
+                                        $feedSources = $nugetConfig.SelectNodes("//packageSources/add")
+                                        $feedSources.Count -gt 1
+                                    }
+
+        if($multipleFeedConfigs.Count -gt 0){
+            $uniqueRepositoryNames = $multipleFeedConfigs.repository.html_url | Select-Object -Unique
+            Write-Host ""
+            Write-Host "$($uniqueRepositoryNames.Count) candidate(s)"
+            $uniqueRepositoryNames | ForEach-Object { Write-Host $_}
+            Write-Host ""
+
+            $nugetReferenceSearchResults =@()
+            $multipleFeedConfigs.repository.full_name | 
+                                Select-Object -Unique |
+                                ForEach-Object { $nugetReferenceSearchResults += Get-SearchInfo -Uri "https://api.github.com/search/code?q=filename:packages.config+filename:*.csproj+repo:$($_)" -githubToken $githubToken } 
+
+            $nugetPackages =    $nugetReferenceSearchResults.items |   
+                                Where-Object { $_.name.ToLower() -eq "packages.config" -or $_.name.ToLower().EndsWith(".csproj") }                             
+
+            $nugetPackages | ForEach-Object { 
+               # Write-Host $_.html_url -ForegroundColor Yellow
+                $htmlUrl        = $_.html_url
+                $resourceUrl    = $_.git_url;
+                $config         = Get-XmlFileContent -url $resourceUrl
+                $config.SelectNodes("//PackageReference/@Include | //package/@id") | 
+                ForEach-Object { 
+                    $packageName    = $_.value
+                    try {
+                        $response = Invoke-WebRequest -Method Get -Uri "https://www.nuget.org/packages/$packageName"
+                        if($response.StatusCode -eq [System.Net.HttpStatusCode]::NotFound)
+                        {
+                            Write-Host "$packageName not present in nuget.org but listed in $htmlUrl" -ForegroundColor Green
+                        }
+                    }
+                    catch {
+                        Write-Host "$packageName not present in nuget.org but listed in $htmlUrl" -ForegroundColor Green
+                    }              
+                }
+            }
+        }
+        else {
+            Write-Host "No matches to search criteria"
+        }
+    }
+
+    Clear-Host
+    Find-VulnerableRepositories -minutes 15 -githubToken "<GITHUB TOKEN>"
+    </code>
+<pre/>
+
