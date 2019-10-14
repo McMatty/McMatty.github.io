@@ -35,9 +35,11 @@ Let me just fix that for you.
   
 <h3>Package hijacking</h3>
 <p>
-<i>
+    <p>
+    <i>
     I have not seen this previously written about so I may be the first. It's not reliable to use to target organisations due to the         requirements. But it may be useable in some cases which I hope will help some poor red teamer one day.
     </i>
+    </p>
 
 Like dll hijacking it is possible to hijack nuget packages if there have been some misconfigurations.
 To be able to do this several conditions are required:
