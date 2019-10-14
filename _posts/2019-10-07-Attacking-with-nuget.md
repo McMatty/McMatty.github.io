@@ -64,7 +64,14 @@ To be able to do this several conditions are required:
 
 <h5>Weaponizing a nuget package</h5>
 <p>
-A condition for this is a project will need to be using two feeds nuget.org and another slower feed. So any feed hosted locally or on the internal network should not be suspectiable to this issue.
+    <ul>
+        <li>Alter a valid dll used in the package to include malicious code. The dll has a chance to enter the production environment</li>
+        <li>Add a malicious nuget install script. .NET analyzers install themselves to projects via PowerShell scripts</li>
+    </ul>
+    
+    The PowerShell scripts need to follow this format within the package :: Package.Name.1.0.0.nupkg\tools\install.ps1
+    This will execute upon being downloaded via the nuget client.
+    The script path cannot be created in a project in visual studio as it will consider PowerShell scripts as part of the package and       not the install.
 </p>
 
 
