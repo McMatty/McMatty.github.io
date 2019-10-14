@@ -1,7 +1,7 @@
 ---
 layout: post
 category: publish
-title: Attacking with nuget
+title: Nuget package hijacking
 ---
 
 <p>
@@ -21,7 +21,7 @@ Let me just fix that for you.
   </pre>
 </p>
 
-<h3>What are nuget packages</h3>
+<h3>What are nuget packages?</h3>
 <p>
   <pre>
     <code>
@@ -32,26 +32,17 @@ Let me just fix that for you.
     </code>
   </pre>
 </p>
-
-<h3>Methods of attack</h3>
-<p>    
-    <ul>
-        <li>Package hijacking on nuget or public feed</li>          
-        <li>Tamper with existing packages in a feed</li>
-        <li>Typo squat popular packages on nuget or public feed</li>
-    </ul>
-</p>
   
 <h3>Package hijacking</h3>
 <p>
 <i>
-    I have not seen this previously written about so I may be the first. Its not reliable to use to target organisations due to the         requirements. But it may be usuable in some cases which I hope will help some poor red teamer one day.
+    I have not seen this previously written about so I may be the first. It's not reliable to use to target organisations due to the         requirements. But it may be useable in some cases which I hope will help some poor red teamer one day.
     </i>
 
 Like dll hijacking it is possible to hijack nuget packages if there have been some misconfigurations.
 To be able to do this several conditions are required:
     <ol>
-        <li>The nuget.config must use two seperate feeds.</li>          
+        <li>The nuget.config must use at least two package feeds.</li>          
         <li>The package name not exist in all feeds</li>
         <li>The feed that does not have package is controllable by an attacker such as a public repository</li>
         <li>The feed that the attacker can use responds faster than the other feed</li>   
@@ -62,29 +53,13 @@ To be able to do this several conditions are required:
 
     So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed.
     Nuget feeds defined in configuration do not have an observed order - instead feeds resolve by fastest response. So if one feed
-    has a mirror closer to a developer thats where packages will be checked for first. This means if a company hosts its own packages
+    has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
     outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
     
     Mitigated with certificate validation and hash checking.
     Mitigated by reserving the package name on the public repository.
     Mitigated with an internal hosted nuget feed and removing the public feed reference.
 </p>
-
-<h3>Package tampering</h3>
-<p>
-    This is straight forward - if a server hosting the nuget packages for an organisation is breached the content within the projects
-    can be alter. Open them up as a zip file and replace the dll. Additionally nuget installs using powershell so scripts can be
-    altered. A tampered package will essentially become viral in a company travelling to developer machines and builds. 
-    A malicious dll in one of those packages can end up in production if the original functionality of the dll remains.
-    
-    Mitigated with certificate validation and hash checking.
-</p>
-
-<h3>Typo squating</h3>
-<p>  
-    Simply create malicious packages on nuget.org with common typos of popular packages. Much like all typo squating.
-</p>
-
 
 <h5>Weaponizing a nuget package</h5>
 <p>
@@ -98,7 +73,7 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 <p>
     <ol>
         <li>
-            Use the github API to search repositories written in C# or favorite flavor of .NET. Search for recent activity such as a               push or create. Active development work requires the packages when additional developers come on to the project.
+            Use the github API to search repositories written in C# or favourite flavour of .NET. Search for recent activity such as a               push or create. Active development work requires the packages when additional developers come on to the project.
             </li>
         <li>
             Then search the repository for a nuget.config. In the configuration file check for two feeds in my example nuget.org               and myget.org.
@@ -112,7 +87,7 @@ A condition for this is a project will need to be using two feeds nuget.org and 
         </li>
         <li>
             <i>
-                This is only a candiate for attack - network latency, package validation are still obsticles that are not easy to                       determine.
+                This is only a candidate for an attack as the other factors previously mentioned will affect the outcome.
             </i>
         </li>
     </ol>
