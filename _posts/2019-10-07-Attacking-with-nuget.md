@@ -43,7 +43,7 @@ Supply chain attacks through package management systems is not new however there
 <p>
 Like dll hijacking it is possible to hijack nuget packages.
 To be able to do this several conditions are required:
-    <0l>
+    <ol>
         <li>The nuget.config must use two seperate feeds.</li>          
         <li>The pack</li>
         <li>Typo squat popular packages on nuget or public feed</li>
