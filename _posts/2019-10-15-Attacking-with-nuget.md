@@ -71,7 +71,7 @@ To be able to do this several conditions are required:
         <li>Add a malicious nuget install script. .NET analyzers install themselves to projects via PowerShell scripts</li>
     </ul>
     
-    The PowerShell scripts need to follow this format within the package :: Package.Name.1.0.0.nupkg\tools\install.ps1
+    The PowerShell scripts need to follow this format within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
     This will execute upon being downloaded via the nuget client.
     The script path cannot be created in a project in visual studio as it will consider PowerShell scripts as part of the package and       not the install.
 </p>
