@@ -50,15 +50,16 @@ To be able to do this several conditions are required:
         <li>The target developer / build / project does not have a local cache of the nuget project</li> 
         <li>The target developer / build / project does not validate hashes or package specific certificates</li> 
     </ol>   
-
+    <p>
     So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed.
     Nuget feeds defined in configuration do not have an observed order - instead feeds resolve by fastest response. So if one feed
     has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
     outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
+    </p>
     
-    Mitigated with certificate validation and hash checking.
-    Mitigated by reserving the package name on the public repository.
-    Mitigated with an internal hosted nuget feed and removing the public feed reference.
+    Mitigated with certificate validation and hash checking.<br>
+    Mitigated by reserving the package name on the public repository.<br>
+    Mitigated with an internal hosted nuget feed and removing the public feed reference.<br>
 </p>
 
 <h5>Weaponizing a nuget package</h5>
@@ -99,7 +100,8 @@ A condition for this is a project will need to be using two feeds nuget.org and 
 <h5>Script to locate potentially vulnerable projects</h5>
 <pre>
     <code>
-
+    #Yes yes I know its an awful mess but it works and my version on git is far prettier
+    
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     function Get-Git {
         param(
