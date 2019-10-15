@@ -58,7 +58,12 @@ To be able to do this several conditions are required:
     has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
     outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
     </p>
-    
+    <p>
+        <img src="/images/nuget-order.png" />
+    </p>
+    <p>
+        <img src="/images/nuget-response.png" />
+    </p>
     Mitigated with certificate validation and hash checking.<br>
     Mitigated by reserving the package name on the public repository.<br>
     Mitigated with an internal hosted nuget feed and removing the public feed reference.<br>
