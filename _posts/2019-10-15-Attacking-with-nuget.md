@@ -86,8 +86,11 @@ To be able to do this several conditions are required:
     This will execute upon being downloaded via the nuget client.
     The script path cannot be created in a project in visual studio as it will consider PowerShell scripts as part of the package and       not the install.
       <p>
-        <img src="/images/nuget-edit.png" />
+        <img src="/images/nugpg-tools.png" />
     </p>     
+     <p>
+        <img src="/images/nupkg-edit.png" />
+    </p> 
 </p>
 
 
