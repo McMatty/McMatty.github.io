@@ -53,13 +53,16 @@ To be able to do this several conditions are required:
         <li>The target developer / build / project does not validate hashes or package specific certificates</li> 
     </ol>   
     <p>
-    So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed.
-    Nuget feeds defined in configuration do not have an observed order - instead feeds resolve by fastest response. So if one feed
-    has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
-    outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
+    So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed.    
     </p>
     <p>
         <img src="/images/nuget-order.png" />
+    </p>
+    <p>
+    Nuget feeds defined in configuration do not have an observed order - instead feeds resolve by fastest response. So if one feed
+    has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
+    outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
+    In a visual studio IDE for nuget settings you can see it is quite misleading with the arrows one would assume affect resolution order.
     </p>
     <p>
         <img src="/images/nuget-response.png" />
