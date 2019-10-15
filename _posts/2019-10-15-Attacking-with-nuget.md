@@ -81,12 +81,12 @@ To be able to do this several conditions are required:
     
     The PowerShell scripts need to follow this format within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
       <p>
-        <img src="/images/nuget-zip.png" />
+        <img src="/images/nupkg-zip.png" />
     </p>
     This will execute upon being downloaded via the nuget client.
     The script path cannot be created in a project in visual studio as it will consider PowerShell scripts as part of the package and       not the install.
       <p>
-        <img src="/images/nugpg-tools.png" />
+        <img src="/images/nupkg-tools.png" />
     </p>     
      <p>
         <img src="/images/nupkg-edit.png" />
