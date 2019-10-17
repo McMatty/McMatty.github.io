@@ -70,6 +70,7 @@ To be able to do this several conditions must be met:
     <ul>
         <li>Alter a valid dll used in the package to include malicious code. </li>
         <li>Add a malicious nuget install.ps1 / init.ps1 script. </li>
+        <li>Add a malicious nuget .targets file </li>
     </ul>    
     
     The PowerShell scripts need to be placed in the following path within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
