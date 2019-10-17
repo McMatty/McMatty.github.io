@@ -37,11 +37,11 @@ Let me just fix that for you.
 <p>
     
 Like dll hijacking it is possible to hijack nuget packages if there have been some misconfigurations.
-A successful result of this attack is a package from a different nuget feed being sent upon a nuget restore the content of which the attacker controls.
-To be able to do this several conditions are required:
+A successful result of this attack is an attackers package from a different nuget feed being instead of the original.
+To be able to do this several conditions must be met:
     <ol>
         <li>The nuget.config must use at least two package feeds.</li>          
-        <li>The package name not exist in all feeds</li>
+        <li>The package name does not exist in one of the feeds</li>
         <li>The feed that does not have package is controllable by an attacker such as a public repository</li>
         <li>The feed that the attacker can use responds faster than the other feed</li>   
         <li>The attacker knows the name and version of the package used by the developer / build / project</li>  
@@ -49,13 +49,13 @@ To be able to do this several conditions are required:
         <li>The target developer / build / project does not validate hashes or package specific certificates</li> 
     </ol>   
     <p>
-    So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed.    
+    So there are a number of conditions. These will generally not exist on open source or smaller projects where just the nuget.org feed     is used. It tends to be larger enterprise projects where company specific libraries with reuse that you will find a private feed as     well as the public nuget.org feed. 
     </p>
     <p>
         <img src="/images/nuget-order.png" />
     </p>
     <p>
-    Nuget feeds defined in configuration do not have an observed order - instead feeds resolve by fastest response. So if one feed
+    Nuget feeds defined in configuration do not have a set resolve order - instead feeds resolve by fastest response. So if one feed
     has a mirror closer to a developer that's where packages will be checked for first. This means if a company hosts its own packages
     outside its network on a private feed there is a chance to hijack the internal package by name on nuget.org.
     In a visual studio IDE for nuget settings you can see it is quite misleading with the arrows one would assume affect resolution order.
