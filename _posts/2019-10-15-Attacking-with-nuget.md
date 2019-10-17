@@ -89,7 +89,7 @@ To be able to do this several conditions are required:
 
 <p>
 .Net core projects no longer execute PowerShell scripts upon install. 
-So as of me writting this there is no way to execute during the nuget package install phase. Part of the reasoning behind this is because these scripts could indeed be used for a malicious purpose and so the team behind nuget removed this functionality from the newer versions support .net core.
+So as of writting this there is no way to execute during the nuget package install phase. Part of the reasoning behind this is because these scripts could indeed be used for a malicious purpose and so the team behind nuget removed this functionality from the newer versions support .net core.
     </p>
 <p>
     <b>However</b> nuget packages can include msbuild .targets and .props files. If you have ever written a malicious csproj file you will know where this is going.
@@ -111,7 +111,7 @@ So targets are used for additional build operations that trigger off defined eve
 So the attack now triggers upon a build event - which in the case of restoring a package will be the most probablistic action following a restore.
 
 <h3>Finding vulnerable projects</h3>
-<h5>Non targeted</h5>
+<h4>Non targeted</h4>
 <p>
     <ol>
         <li>
@@ -134,12 +134,21 @@ So the attack now triggers upon a build event - which in the case of restoring a
         </li>
     </ol>
 </p>
-<h5>Targeted</h5>
+<h4>Targeted</h4>
 <p>
     The same as above but alter the script to search only the target organisation repository or that of any developers known to work         within the organisation. Additionally you could reverse applications built by the organisation and attempt to determine nuget           packages used. Assembly versions and namespace used across more than one application are relevant guesses - but are just guesses.
 </p>
 
-<h5>Script to locate potentially vulnerable projects</h5>
+<h3>Mitigations</h3>
+<p>
+    <ul>
+        <li>Switching to a single feed - shift your nuget.org packages into your private</li>
+        <li>Sign packages and configure nuget to only run verified packages</li>
+        <li>If nuget.org is required shift the secondary feed closer to the build - say on your internal network</li>
+    </ul>
+</p>
+
+<h4>Script to locate potentially vulnerable projects</h4>
 <pre>
     <code>
     #Yes yes I know its an awful mess but it works and my version on git is far prettier
