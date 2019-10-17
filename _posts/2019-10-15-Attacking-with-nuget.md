@@ -65,11 +65,11 @@ To be able to do this several conditions are required:
     </p>    
 </p>
 
-<h5>Weaponizing a nuget package</h5>
+<h4>Weaponizing a nuget package</h4>
 <p>
     <ul>
-        <li>Alter a valid dll used in the package to include malicious code. The dll has a chance to enter the production environment</li>
-        <li>Add a malicious nuget install.ps1 / init.ps1 script. .NET analyzers install themselves to projects via PowerShell scripts</li>
+        <li>Alter a valid dll used in the package to include malicious code. </li>
+        <li>Add a malicious nuget install.ps1 / init.ps1 script. </li>
     </ul>    
     
     The PowerShell scripts need to be placed in the following path within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
@@ -88,7 +88,8 @@ To be able to do this several conditions are required:
 </p>
 
 <p>
-.Net core projects no longer execute PowerShell scripts upon install. So as of me writting this there is no way to execute during the nuget package install phase. Part of the reasoning behind this is because these scripts could indeed be used for a malicious purpose and so the team behind nuget removed this functionality from the newer versions support .net core.
+.Net core projects no longer execute PowerShell scripts upon install. 
+So as of me writting this there is no way to execute during the nuget package install phase. Part of the reasoning behind this is because these scripts could indeed be used for a malicious purpose and so the team behind nuget removed this functionality from the newer versions support .net core.
     </p>
 <p>
     <b>However</b> nuget packages can include msbuild .targets and .props files. If you have ever written a malicious csproj file you will know where this is going.
@@ -98,7 +99,9 @@ To be able to do this several conditions are required:
 <pre>
     <code>
         <i>
-       Targets group tasks together in a particular order and allow the build process to be factored into smaller units. For example, one target may delete all files in the output directory to prepare for the build, while another compiles the inputs for the project and places them in the empty directory
+        Targets group tasks together in a particular order and allow the build process to be factored into smaller units. 
+        For example, one target may delete all files in the output directory to prepare for the build, while another compiles 
+        the inputs for the project and places them in the empty directory
         </i>
     </code>
   </pre>
