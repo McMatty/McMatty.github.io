@@ -35,13 +35,9 @@ Let me just fix that for you.
   
 <h3>Package hijacking</h3>
 <p>
-    <p>
-    <i>
-    I have not seen this previously written about so I may be the first. It's not reliable to use to target organisations due to the         requirements. But it may be useable in some cases which I hope will help some poor red teamer one day.
-    </i>
-    </p>
-
+    
 Like dll hijacking it is possible to hijack nuget packages if there have been some misconfigurations.
+A successful result of this attack is a package from a different nuget feed being sent upon a nuget restore the content of which the attacker controls.
 To be able to do this several conditions are required:
     <ol>
         <li>The nuget.config must use at least two package feeds.</li>          
@@ -66,25 +62,23 @@ To be able to do this several conditions are required:
     </p>
     <p>
         <img src="/images/nuget-response.png" />
-    </p>
-    Mitigated with certificate validation and hash checking.<br>
-    Mitigated by reserving the package name on the public repository.<br>
-    Mitigated with an internal hosted nuget feed and removing the public feed reference.<br>
+    </p>    
 </p>
 
 <h5>Weaponizing a nuget package</h5>
 <p>
     <ul>
         <li>Alter a valid dll used in the package to include malicious code. The dll has a chance to enter the production environment</li>
-        <li>Add a malicious nuget install script. .NET analyzers install themselves to projects via PowerShell scripts</li>
-    </ul>
+        <li>Add a malicious nuget install.ps1 / init.ps1 script. .NET analyzers install themselves to projects via PowerShell scripts</li>
+    </ul>    
     
-    The PowerShell scripts need to follow this format within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
+    The PowerShell scripts need to be placed in the following path within the package :: <code class="highlighter-rouge">Package.Name.1.0.0.nupkg\tools\install.ps1</code>
       <p>
         <img src="/images/nupkg-zip.png" />
     </p>
-    This will execute upon being downloaded via the nuget client.
-    The script path cannot be created in a project in visual studio as it will consider PowerShell scripts as part of the package and       not the install.
+    This will execute upon being downloaded via the nuget client during the install process running the script.
+    This however only works for projects using the older packages.config format. The newer .Net core csproj formats
+    require a different attack.    
       <p>
         <img src="/images/nupkg-tools.png" />
     </p>     
@@ -93,6 +87,25 @@ To be able to do this several conditions are required:
     </p> 
 </p>
 
+<p>
+.Net core projects no longer execute PowerShell scripts upon install. So as of me writting this there is no way to execute during the nuget package install phase. Part of the reasoning behind this is because these scripts could indeed be used for a malicious purpose and so the team behind nuget removed this functionality from the newer versions support .net core.
+    </p>
+<p>
+    <b>However</b> nuget packages can include msbuild .targets and .props files. If you have ever written a malicious csproj file you will know where this is going.
+</p>
+
+<p>
+<pre>
+    <code>
+        <i>
+       Targets group tasks together in a particular order and allow the build process to be factored into smaller units. For example, one target may delete all files in the output directory to prepare for the build, while another compiles the inputs for the project and places them in the empty directory
+        </i>
+    </code>
+  </pre>
+</p>
+
+So targets are used for additional build operations that trigger off defined events. It just so happens there is a <b>exec</b> task that is built in. Whats also worth noting is that within target files you can define variables as well as write C# code to execute. 
+So the attack now triggers upon a build event - which in the case of restoring a package will be the most probablistic action following a restore.
 
 <h3>Finding vulnerable projects</h3>
 <h5>Non targeted</h5>
