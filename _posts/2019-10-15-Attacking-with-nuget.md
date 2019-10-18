@@ -113,6 +113,19 @@ So the attack now triggers upon a build event - which in the case of restoring a
 
 <pre>
     <code>
+    <?xml version="1.0"?>
+<package >
+    <metadata minClientVersion="2.5">
+    <!-- ... -->
+    </metadata>
+    <files>
+        <!-- Include everything in \build -->
+        <file src="build\malicious.targets" target="build" />
+
+        <!-- Other files -->
+        <!-- ... -->
+    </files>
+</package>
     </code>
 </pre>
 
