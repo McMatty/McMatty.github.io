@@ -113,7 +113,7 @@ So the attack now triggers upon a build event - which in the case of restoring a
 
 <pre>
     <code>
-     <i>&lt;!-- .nuspec --&gt;</i>
+     <i>&lt;!--Example .nuspec file--&gt;</i>
     &lt;?xml version=&quot;1.0&quot;?&gt;
     &lt;package &gt;
         &lt;metadata minClientVersion=&quot;2.5&quot;&gt;
