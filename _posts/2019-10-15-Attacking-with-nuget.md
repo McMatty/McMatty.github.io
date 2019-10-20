@@ -337,7 +337,7 @@ param (
     $xmlFileContent
 }
 
-function Find-VulnerableReposotories {
+function Find-VulnerableRepositories {
     [CmdletBinding()]
     param (
         [Parameter()]
@@ -418,7 +418,7 @@ function Find-VulnerableReposotories {
 }
 
 Clear-Host
-Find-VulnerableReposotories -minutes 25
+Find-VulnerableRepositories -minutes 25
     </code>
 </pre>
 
