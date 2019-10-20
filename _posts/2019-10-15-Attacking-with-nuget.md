@@ -198,6 +198,7 @@ So the attack now triggers upon a build event - which in the case of restoring a
 </p>
 
 <h4>Script to locate potentially vulnerable projects</h4>
+<p>You will need to supply your own github personal token below in the placeholders "GITHUB-API-TOKEN" </p>
 <pre>
     <code>
     #Yes yes I know its an awful mess but it works and my version on git is far prettier
